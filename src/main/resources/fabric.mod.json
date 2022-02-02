@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "rconoutputnewline",
+  "version": "${version}",
+
+  "name": "Rcon Output Newline",
+  "description": "Fixes rcon output by appending a newline.",
+  "authors": [
+    "llndqvst"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.net/mod/rconoutputnewline",
+    "sources": "https://github.com/llndqvst/rconoutputnewline"
+  },
+
+  "license": "MIT",
+  "icon": "assets/rconoutputnewline/icon.png",
+
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "com.github.llndqvst.rconoutputnewline.RconOutputNewline"
+    ]
+  },
+  "mixins": [
+    "modid.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.12.12",
+    "fabric": "*",
+    "minecraft": "1.18.x",
+    "java": ">=17"
+  }
+}
