@@ -10,7 +10,7 @@ on:
       - '*'
 
 jobs:
-  build:
+  build-and-push:
     strategy:
       matrix:
         # Use these Java versions
@@ -18,8 +18,9 @@ jobs:
           17,    # Current Java LTS & minimum supported by Minecraft
         ]
         # and run on both Linux and Windows
-        os: [ubuntu-20.04, windows-2022]
+        os: [ubuntu-20.04]
     runs-on: ${{ matrix.os }}
+    environment: modrinth
     steps:
       - name: checkout repository
         uses: actions/checkout@v2
@@ -34,6 +35,11 @@ jobs:
         run: chmod +x ./gradlew
       - name: build
         run: ./gradlew build "-Pmod_version=${{ github.ref_name }}"
+      - name: publish
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          MODRINTH_ID: ${{ secrets.MODRINTH_ID }}
+        run: ./gradlew build publishModrinth "-Pmod_version=${{ github.ref_name }}"
       - name: capture build artifacts
         if: ${{ runner.os == 'Linux' && matrix.java == '17' }} # Only upload artifacts built from latest java on one OS
         uses: actions/upload-artifact@v2
