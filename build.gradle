@@ -1,14 +1,14 @@
 plugins {
-	id 'fabric-loom' version '0.11-SNAPSHOT'
+	id 'fabric-loom' version '1.2-SNAPSHOT'
 	id 'maven-publish'
-    id "com.modrinth.minotaur" version "1.2.1"
+    id "com.modrinth.minotaur" version "2.7.5"
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version+"+"+project.minecraft_version
+version = project.mod_version
 group = project.maven_group
 
 repositories {
@@ -72,13 +72,18 @@ publishing {
 	}
 }
 
-import com.modrinth.minotaur.TaskModrinthUpload
-
-task publishModrinth (type: TaskModrinthUpload) {
-    token = System.getenv('MODRINTH_TOKEN') // Use an environment property if releasing your source code on GitHub!
-    projectId = System.getenv('MODRINTH_ID') // The ID of your modrinth project, slugs will not work.
-    versionNumber = version // The version of the mod to upload.
-    uploadFile = remapJar // This links to a task that builds your mod jar and sets "uploadFile" to the mod jar.
-    addGameVersion(project.minecraft_version) // Any minecraft version.
-    addLoader('fabric') // Can be fabric or forge. Modrinth will support liteloader and rift at a later date.
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN") // This is the default. Remember to have the MODRINTH_TOKEN environment variable set or else this will fail, or set it to whatever you want - just make sure it stays private!
+    projectId = "XqOzr8R1" // This can be the project ID or the slug. Either will work!
+    versionNumber = "${version}" // You don't need to set this manually. Will fail if Modrinth has this version already
+    versionType = "release" // This is the default -- can also be `beta` or `alpha`
+    uploadFile = jar // With Loom, this MUST be set to `remapJar` instead of `jar`!
+    gameVersions = ["1.19.4"] // Must be an array, even with only one version
+    loaders = ["fabric"] // Must also be an array - no need to specify this if you're using Loom or ForgeGradle
+    dependencies { // A special DSL for creating dependencies
+        // scope.type
+        // The scope can be `required`, `optional`, `incompatible`, or `embedded`
+        // The type can either be `project` or `version`
+        required.project "fabric-api" // Creates a new required dependency on Fabric API
+    }
 }

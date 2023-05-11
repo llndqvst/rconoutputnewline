@@ -31,3 +31,6 @@ bin/
 # fabric
 
 run/
+
+# self
+test_server/

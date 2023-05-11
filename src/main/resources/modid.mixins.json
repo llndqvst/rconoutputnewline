@@ -6,7 +6,7 @@
   "mixins": [
   ],
   "server": [
-    "RconCommandOutputMixin",
+    "MixinRconCommandOutput",
     "RconCommandOutputAccessor"
   ],
   "injectors": {

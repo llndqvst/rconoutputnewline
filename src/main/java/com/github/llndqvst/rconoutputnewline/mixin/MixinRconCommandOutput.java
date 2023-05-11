@@ -7,12 +7,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RconCommandOutput.class)
-public class RconCommandOutputMixin {
+public class MixinRconCommandOutput {
 	@Inject(
 		at = @At("TAIL"),
-		method = "sendSystemMessage(Lnet/minecraft/text/Text;Ljava/util/UUID;)V"
+		method = "sendMessage"
 	)
-	private void appendNewline(net.minecraft.text.Text message, java.util.UUID uuid, CallbackInfo info) {
+	private void onSendMessage(net.minecraft.text.Text message, CallbackInfo info) {
 		var b = ((com.github.llndqvst.rconoutputnewline.mixin.RconCommandOutputAccessor) this).getBuffer();
 		b.append('\n');
 	}
